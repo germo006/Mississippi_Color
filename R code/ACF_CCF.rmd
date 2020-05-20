@@ -1,0 +1,72 @@
+---
+title: "ccf_color_2020.04.22"
+author: "Noah Germolus"
+date: "April 22, 2020"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## R Markdown
+
+```{r Loading}
+library(pracma)
+library(forecast)
+setwd("Z:/Noah_Germolus/Irrelevant/CDOM/Thesis Materials/R code/")
+nullex <- read.csv("../Spreadsheets/nullexR.csv")
+```
+
+
+
+```{r movAvg}
+nullex[["colorma"]] <- movavg(nullex[["color"]],4, type="s")
+nullex[["flowma"]]  <- movavg(nullex[["discharge"]], 4, type="s")
+
+
+nullex[["colordetrend"]] <- nullex[["color"]] - nullex[["colorma"]]
+nullex[["flowdetrend"]]  <- nullex[["discharge"]] - nullex[["flowma"]]
+
+fitAR <- ar(nullex["discharge"], order.max = 2)
+nullex[["flowRes"]] <- fitAR[["resid"]]
+fitARMA <- arima(nullex[["color"]], order=c(0,0,4))#, seasonal = list(order=c(0,1,0), period=7))
+```
+
+```{r ACF}
+#acfCDetrend<-acf(nullex["colordetrend"])
+acfCDetrend<-acf(fitARMA[["residuals"]], na.action = na.pass)
+#acfFDetrend<-acf(ts(nullex[["flowRes"]]), na.action = na.pass)
+hist(fitARMA[["residuals"]][fitARMA[["residuals"]]<1500])
+```
+
+```{r CCF}
+ccf(nullex["colordetrend"], nullex["flowdetrend"], lag.max = 10)
+ccf(nullex["colordetrend"], nullex["discharge"])
+forPat <- ccf(log10(nullex["color"]), log10(nullex["discharge"]), lag.max = 10)
+useAR <- ccf(nullex["colordetrend"], nullex["flowRes"], na.action = na.pass )
+
+```
+
+
+```{r Lyne-Hollick}
+source('https://raw.github.com/TonyLadson/BaseflowSeparation_LyneHollick/master/BFI.R')
+
+# Separate the data into 1944 and 1947-2010. 
+Q1944 <- nullex$discharge[1:366]
+Q19XX <- nullex$discharge[367:nrow(nullex)]
+
+plot(nullex$discharge[1:366], type = "l")
+
+QB1944 = BFI(Q1944, alpha = 0.925, passes = 3, n.reflect = 30, ReturnQbase = TRUE)$Qbase
+QB19XX = BFI(Q19XX, alpha = 0.925, passes = 3, n.reflect = 30, ReturnQbase = TRUE)$Qbase
+
+QB = c(QB1944, QB19XX)
+
+lines(QB[1:366], lty=2)
+
+nullex$baseflow = QB
+
+write.csv(nullex, file = "../Spreadsheets/nullexR_out.csv", sep = ",", col.names = TRUE)
+
+```
