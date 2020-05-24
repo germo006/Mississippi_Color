@@ -14,7 +14,7 @@ subplot(4,3,1)
 % h(3) is lower bound
 h(2).Color = Promare{3}; h(2).LineStyle = '--';
 h(3).Color = Promare{3}; h(3).LineStyle = '--';
-h(1).Color = Promare{8}; 
+h(1).Color = Promare{7}; 
 ax = gca; ax.GridColor = 'none'; ax.TickLength = [0,0];
 ax.FontWeight = 'bold'; ax.LineWidth = 1;
 title('Minimum')
@@ -28,7 +28,7 @@ subplot(4,3,2)
 % h(3) is lower bound
 h(2).Color = Promare{3}; h(2).LineStyle = '--';
 h(3).Color = Promare{3}; h(3).LineStyle = '--';
-h(1).Color = Promare{8}; 
+h(1).Color = Promare{7}; 
 ax = gca; ax.GridColor = 'none'; ax.TickLength = [0,0];
 ax.FontWeight = 'bold'; ax.LineWidth = 1;
 title('Mean')
@@ -42,7 +42,7 @@ subplot(4,3,3)
 % h(3) is lower bound
 h(2).Color = Promare{3}; h(2).LineStyle = '--';
 h(3).Color = Promare{3}; h(3).LineStyle = '--';
-h(1).Color = Promare{8}; 
+h(1).Color = Promare{7}; 
 ax = gca; ax.GridColor = 'none'; ax.TickLength = [0,0];
 ax.FontWeight = 'bold'; ax.LineWidth = 1;
 title('Maximum')
@@ -56,7 +56,7 @@ subplot(4,3,4)
 % h(3) is lower bound
 h(2).Color = Promare{3}; h(2).LineStyle = '--';
 h(3).Color = Promare{3}; h(3).LineStyle = '--';
-h(1).Color = Promare{8}; 
+h(1).Color = Promare{7}; 
 ax = gca; ax.GridColor = 'none'; ax.TickLength = [0,0];
 ax.FontWeight = 'bold'; ax.LineWidth = 1;
 title('')
@@ -70,7 +70,7 @@ subplot(4,3,5)
 % h(3) is lower bound
 h(2).Color = Promare{3}; h(2).LineStyle = '--';
 h(3).Color = Promare{3}; h(3).LineStyle = '--';
-h(1).Color = Promare{8}; 
+h(1).Color = Promare{7}; 
 ax = gca; ax.GridColor = 'none'; ax.TickLength = [0,0];
 ax.FontWeight = 'bold'; ax.LineWidth = 1;
 title('')
@@ -84,7 +84,7 @@ subplot(4,3,6)
 % h(3) is lower bound
 h(2).Color = Promare{3}; h(2).LineStyle = '--';
 h(3).Color = Promare{3}; h(3).LineStyle = '--';
-h(1).Color = Promare{8}; 
+h(1).Color = Promare{7}; 
 ax = gca; ax.GridColor = 'none'; ax.TickLength = [0,0];
 ax.FontWeight = 'bold'; ax.LineWidth = 1;
 title('')
@@ -98,7 +98,7 @@ subplot(4,3,7)
 % h(3) is lower bound
 h(2).Color = Promare{3}; h(2).LineStyle = '--';
 h(3).Color = Promare{3}; h(3).LineStyle = '--';
-h(1).Color = Promare{8}; 
+h(1).Color = Promare{7}; 
 ax = gca; ax.GridColor = 'none'; ax.TickLength = [0,0];
 ax.FontWeight = 'bold'; ax.LineWidth = 1;
 title('')
@@ -112,7 +112,7 @@ subplot(4,3,8)
 % h(3) is lower bound
 h(2).Color = Promare{3}; h(2).LineStyle = '--';
 h(3).Color = Promare{3}; h(3).LineStyle = '--';
-h(1).Color = Promare{8}; 
+h(1).Color = Promare{7}; 
 ax = gca; ax.GridColor = 'none'; ax.TickLength = [0,0];
 ax.FontWeight = 'bold'; ax.LineWidth = 1;
 title('')
@@ -126,7 +126,7 @@ subplot(4,3,9)
 % h(3) is lower bound
 h(2).Color = Promare{3}; h(2).LineStyle = '--';
 h(3).Color = Promare{3}; h(3).LineStyle = '--';
-h(1).Color = Promare{8}; 
+h(1).Color = Promare{7}; 
 ax = gca; ax.GridColor = 'none'; ax.TickLength = [0,0];
 ax.FontWeight = 'bold'; ax.LineWidth = 1;
 title('')
@@ -140,7 +140,7 @@ subplot(4,3,10)
 % h(3) is lower bound
 h(2).Color = Promare{3}; h(2).LineStyle = '--';
 h(3).Color = Promare{3}; h(3).LineStyle = '--';
-h(1).Color = Promare{8}; 
+h(1).Color = Promare{7}; 
 ax = gca; ax.GridColor = 'none'; ax.TickLength = [0,0];
 ax.FontWeight = 'bold'; ax.LineWidth = 1;
 title('')
@@ -154,7 +154,7 @@ subplot(4,3,11)
 % h(3) is lower bound
 h(2).Color = Promare{3}; h(2).LineStyle = '--';
 h(3).Color = Promare{3}; h(3).LineStyle = '--';
-h(1).Color = Promare{8}; 
+h(1).Color = Promare{7}; 
 ax = gca; ax.GridColor = 'none'; ax.TickLength = [0,0];
 ax.FontWeight = 'bold'; ax.LineWidth = 1;
 title('')
@@ -168,7 +168,7 @@ subplot(4,3,12)
 % h(3) is lower bound
 h(2).Color = Promare{3}; h(2).LineStyle = '--';
 h(3).Color = Promare{3}; h(3).LineStyle = '--';
-h(1).Color = Promare{8}; 
+h(1).Color = Promare{7}; 
 ax = gca; ax.GridColor = 'none'; ax.TickLength = [0,0];
 ax.FontWeight = 'bold'; ax.LineWidth = 1;
 title('')

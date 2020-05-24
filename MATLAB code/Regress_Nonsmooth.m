@@ -3,8 +3,8 @@
 
 FitTable = array2table(nullex, 'VariableNames', {'Y','M','d','C','Q','T','P'});
 FitTable.datenums = datenum(FitTable.Y,FitTable.M,FitTable.d);
-FitTable.logQ = log10(FitTable.Q);
-FitTable.lagQ = [NaN;NaN;NaN;NaN;FitTable.Q(1:end-4)];
+FitTable.logQ = log10(FitTable.Q);% - min(FitTable.Q));
+FitTable.lagQ = [NaN;NaN;NaN;NaN;FitTable.Q(1:end-4)];%-min(FitTable.Q(1:end-4))];
 FitTable.loglagQ = log10(FitTable.lagQ);
 FitTable.logC = log10(FitTable.C);
 FitTable.sine = sin(FitTable.datenums*2*pi./365.25);

@@ -159,7 +159,7 @@ clear m1 disc colr yr h
 % and UniqueIce(4)
 
 figure
-subplot(1,3,1)
+subplot(1,4,2)
 plot(IceOut.discharge(IceOut.Events==UniqueIce(16)),...
     IceOut.color(IceOut.Events==UniqueIce(16)), 'Color',...
     Promare{1}, 'LineWidth', 1.5)
@@ -172,7 +172,7 @@ h(2).LineStyle = '--';
 h(2).Color = Promare{5};
 h(2).LineWidth = 1;
 h(3).HandleVisibility = 'off'; h(4).HandleVisibility = 'off';
-text(220,63,'a','FontWeight','bold')
+text(220,63,'b','FontWeight','bold')
 legend('off');
 title('')
 ax = gca;
@@ -180,10 +180,10 @@ ax.FontName = 'arial';
 ax.FontWeight = 'bold';
 ax.LineWidth = 1;
 ax.Box = 'on';
-ylabel('Color (PCU)')
+ylabel('')
 xlabel('Discharge (m^3/s)', 'Interpreter','tex')
 
-subplot(1,3,2)
+subplot(1,4,3)
 plot(Rain.discharge(Rain.Events==UniqueRain(34)),...
     Rain.color(Rain.Events==UniqueRain(34)), 'Color',...
     Promare{3}, 'LineWidth', 1.5)
@@ -196,7 +196,7 @@ h(2).LineStyle = '--';
 h(2).Color = Promare{5};
 h(2).LineWidth = 1;
 h(3).HandleVisibility = 'off'; h(4).HandleVisibility = 'off';
-text(60,107,'b','FontWeight','bold')
+text(60,107,'c','FontWeight','bold')
 legend('off');
 title('')
 ax = gca;
@@ -204,10 +204,10 @@ ax.FontName = 'arial';
 ax.FontWeight = 'bold';
 ax.LineWidth = 1;
 ax.Box = 'on';
-ylabel('Color (PCU)')
+ylabel('')
 xlabel('Discharge (m^3/s)', 'Interpreter','tex')
 
-subplot(1,3,3)
+subplot(1,4,1)
 simFlow = 0.0283168.*(15000+30000.*sin(pi().*[1:21]'./21));
 simCol = 50 + 50*sin(pi().*[1:21]'./18.5 - (5*pi()/21))-([1:21]'./3.5).^2;
 plot(simFlow(1:20),...
@@ -222,7 +222,7 @@ h(2).LineStyle = '--';
 h(2).Color = Promare{5};
 h(2).LineWidth = 1;
 h(3).HandleVisibility = 'off'; h(4).HandleVisibility = 'off';
-text(580,86,'c','FontWeight','bold')
+text(580,86,'a','FontWeight','bold')
 legend('off');
 title('')
 ax = gca;
@@ -233,7 +233,7 @@ ax.Box = 'on';
 ylabel('Color (PCU)')
 xlabel('Discharge (m^3/s)','Interpreter','tex')
 
-%% An Analysis of Slope. If a linear regression is significant, keep its 
+% An Analysis of Slope. If a linear regression is significant, keep its 
 % slope and p-value for later. 
 iceSlopes = zeros(length(UniqueIce), 3); %Year, Slope, pval
 rainSlopes = zeros(length(UniqueRain), 3);
@@ -259,12 +259,20 @@ rainSlopes(rainSlopes(:,3)>0.01, :) = [];
 % A bit of wrangling to get the boxplot to work
 types = [string(repmat('Ice Loops', size(iceSlopes,1),1));...
     string(repmat('Rain Loops', size(rainSlopes,1),1))];
-figure
-labs = {['Ice-Out n = ', num2str(size(iceSlopes,1))], ...
-    ['Rain n = ', num2str(size(rainSlopes,1))]};
+subplot(1,4,4)
+labs = {'Ice-Out','Rain'};
+xl = ['n = ', num2str(size(iceSlopes,1)),...
+    '   n = ', num2str(size(rainSlopes,1))];
 boxplot([iceSlopes(:,2); rainSlopes(:,2)],types,'Labels', labs)
 ax = gca;
 hold on
+ax.FontName = 'arial';
+ax.FontWeight = 'bold';
+ax.LineWidth = 1;
+ax.Box = 'on';
 ax.XAxis.TickLabelInterpreter = 'tex';
-ylabel('Slope of Regression Line (PCU m^{3} d)')
+ax.YAxisLocation = 'Right';
+xlabel(xl)
+ylabel('Loop Slope (PCU m^{-3} d)')
+text(0.6,0.37,'d','FontWeight','bold')
 [h, p]=ttest2(iceSlopes(:,2),rainSlopes(:,2))
