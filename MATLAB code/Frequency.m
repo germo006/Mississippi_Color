@@ -6,12 +6,12 @@ load('redoNullex_25April2020.mat')
 load('NoahMaps.mat') % Using the Promare color scheme for some graphs.
 nullex(:,5) = nullex(:,5).*0.0283168; % Converting to m3/d
 setDefaultFigs
-
-ft_flow = fft(nullex(:,5));
-ft_color = fft(nullex(:,4));
+n = size(nullex,1); 
+ft_flow = fft(nullex(:,5))./sqrt(n);
+ft_color = fft(nullex(:,4))./sqrt(n);
 
 fs = 1; % Sample frequency 1/day
-n = size(nullex,1); 
+
 f = (0:n-1)*(fs/n); % Frequency range
 
 ps_flow = (abs(ft_flow).^2)/n;
@@ -23,12 +23,18 @@ f0 = (-n/2:n/2-1)*(fs/n); % 0-centered frequency range
 ps_flow0 = (abs(ft_flow0).^2)/n;
 ps_color0 = (abs(ft_color0).^2)/n; % 0-centered power
 
-subplot(2,1,1)
-plot(f0, ps_color0)
-xlabel('Frequency')
-ylabel('Power')
-
-subplot(2,1,2)
-plot(f0, ps_flow0)
-xlabel('Frequency')
-ylabel('Power')
+stem(f0.*365.25, ps_color0./max(ps_color0), 'LineWidth', 3, 'Color', Promare{2}, 'Marker', 'none')
+xlabel('Frequency (yr^{-1})')
+ylabel('Normalized Power')
+% ylim([0,0.01])
+hold on
+% yyaxis right
+% set(gca, 'YColor', 'k')
+stem(f0.*365.25, ps_flow0./max(ps_flow0), 'LineWidth', 3, 'Color', Promare{7}, 'LineStyle', ':', 'Marker','none')
+xlim([0,1])
+ylim([0,0.01])
+% ylabel('Normalized Power (Flow)')
+legend('Color Power Spectrum', 'Flow Power Spectrum')
+ax = gca;
+ax.TickLength = [0,0];
+%ax.XTickLabel = str2double(cellstr(ax.XTickLabel)).*365;
