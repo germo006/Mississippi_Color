@@ -12,6 +12,9 @@
 % Post calculating baseflow with the Lyne-Hollick filter, I'm using nullex
 % as a table rather than a straight numerical matrix.
 
+% BEWARE: As-is this script generates about 50 plots. It takes a hot minute
+% to run on my laptop. 
+
 load('redoNullex_25April2020.mat')
 load('NoahMaps.mat') % Using the Promare color scheme for some graphs.
 nullex = readtable('../Spreadsheets/nullexR_out.csv');
@@ -276,3 +279,24 @@ xlabel(xl)
 ylabel('Loop Slope (PCU m^{-3} d)')
 text(0.6,0.37,'d','FontWeight','bold')
 [h, p]=ttest2(iceSlopes(:,2),rainSlopes(:,2))
+
+%% Addendum 11 June 2020
+% Comparing valid loop slopes over time.
+
+setDefaultFigs
+subplot(2,1,1)
+errorbar(iceSlopes(:,1), iceSlopes(:,2),...
+    std(iceSlopes(:,2))*ones(length(iceSlopes),1),...
+    'LineWidth', 1, 'Color', Promare{8})
+ylabel('Ice-out Q-C Slope')
+hold on
+scatter(iceSlopes(:,1), iceSlopes(:,2), 'Marker', 'none')
+lsline
+% OOH. Let's do the actual regression.
+rIceOut = fitlm(iceSlopes(:,1), iceSlopes(:,2)); % go ahead and look at the coeffs.
+subplot(2,1,2)
+rmeansl = splitapply(@mean, rainSlopes(:,2), findgroups(rainSlopes(:,1)));
+plot(unique(rainSlopes(:,1)), rmeansl,...
+    'LineWidth', 1, 'Color', Promare{3})
+ylabel('Mean rain Q-C Slope')
+xlabel('Year')
