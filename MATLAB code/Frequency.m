@@ -23,18 +23,23 @@ f0 = (-n/2:n/2-1)*(fs/n); % 0-centered frequency range
 ps_flow0 = (abs(ft_flow0).^2)/n;
 ps_color0 = (abs(ft_color0).^2)/n; % 0-centered power
 
-stem(f0.*365.25, ps_color0./max(ps_color0), 'LineWidth', 3, 'Color', Promare{2}, 'Marker', 'none')
-xlabel('Frequency (yr^{-1})')
+plot((f0.*365.25).^(-1), -log10(ps_color0./max(ps_color0)), 'LineWidth', 1, 'Color', Promare{2}, 'Marker', 'none')
+hold on
+plot((f0.*365.25).^(-1), -log10(ps_flow0./max(ps_flow0)), 'LineWidth', 1.5, 'Color', Promare{7}, 'LineStyle', ':', 'Marker','none')
+stem((f0.*365.25).^(-1), -log10(ps_flow0./max(ps_flow0)), 'LineWidth', 1.5, 'Color', Promare{7}, 'LineStyle', ':', 'Marker','none')
+stem((f0.*365.25).^(-1), -log10(ps_color0./max(ps_color0)), 'LineWidth', 1, 'Color', Promare{2}, 'Marker', 'none')
+xlabel('Oscillation Period (yr)')
 ylabel('Normalized Power')
 % ylim([0,0.01])
 hold on
 % yyaxis right
 % set(gca, 'YColor', 'k')
-stem(f0.*365.25, ps_flow0./max(ps_flow0), 'LineWidth', 3, 'Color', Promare{7}, 'LineStyle', ':', 'Marker','none')
-xlim([0,1])
-ylim([0,0.01])
+
+%ylim([0,0.01])
 % ylabel('Normalized Power (Flow)')
 legend('Color Power Spectrum', 'Flow Power Spectrum')
 ax = gca;
 ax.TickLength = [0,0];
+ax.XScale = "log"; xlim([1,50]);
+xticks([1:2:11,20:10:50])
 %ax.XTickLabel = str2double(cellstr(ax.XTickLabel)).*365;
