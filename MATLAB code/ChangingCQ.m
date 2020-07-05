@@ -39,17 +39,35 @@ clear lintime
 logs = array2table(logs, 'VariableNames',...
     {'Y','M','d','logC','logQ','sine','cosine'});
 
-[dates, slps, Rs] = splitapply(@ExtractModelParams, logs, G);
+[dates, slps, Rs, ps] = splitapply(@ExtractModelParams, logs, G);
 
 plot(datetime(dates(Rs >0.5,:)), slps(Rs>0.5), 'Color', Promare{3})
 xlabel('Date'); ylabel('Linear Slope')
 
+%%
+figure
+for ii = 1:12
+    subplot(4,3,ii)
+    plot(dates(dates(:,2)==ii &ps<0.01, 1), slps(dates(:,2)==ii & ps<0.01), 'Color', Promare{5}) 
+    title(month(datetime([1 ii 1]), 'name'))
+    hold on
+    scatter(dates(dates(:,2)==ii &ps<0.01 &slps>0, 1), slps(dates(:,2)==ii & ps<0.01 &slps>0),...
+        20,'MarkerFaceColor', Promare{6}, 'MarkerEdgeColor', Promare{5})
+    h = lsline; h.Color = Promare{7};
+    [H, pval] = Mann_Kendall(slps(dates(:,2)==ii & ps<0.01 &slps>0), 0.05);
+    text(gca, 0.65, 0.1, strjoin(['p = ', string(round(pval,3))]),...
+        'Units', 'normalized')
+    if pval <0.05
+        h.Color = Promare{4}; h.LineWidth = 1;
+    end
+end
 %% Subroutines
 
-function [date, slope, R] = ExtractModelParams(y,m,d,logC,logQ,sine,cosine)
+function [date, slope, R, p] = ExtractModelParams(y,m,d,logC,logQ,sine,cosine)
 tableInput = table(y,m,d,logC,logQ,sine,cosine);
 regression = fitlm(tableInput, 'logC ~ logQ');% + sine + cosine');
 slope = regression.Coefficients.Estimate(2);
 R = regression.Rsquared.Adjusted;
 date = tableInput{1,1:3};
+p = regression.Coefficients.pValue(2);
 end
