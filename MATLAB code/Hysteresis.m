@@ -103,7 +103,7 @@ UniqueIce = unique(IceOut.Events); UniqueRain = unique(Rain.Events);
 IceMap = winter(numel(UniqueIce));
 RainMap = jet(numel(UniqueRain));
 
-
+%%
 for ii = 1:length(UniqueIce)
     figure
     disc = IceOut.discharge(IceOut.Events==UniqueIce(ii));
@@ -158,7 +158,7 @@ clear m1 disc colr yr h
 %% After examining a bunch of graphs, we want to show off UniqueRain(23) 
 % and UniqueIce(4)
 
-figure
+f = figure('Position', [100,100,900,200],'Units','inches');
 subplot(1,4,2)
 plot(IceOut.discharge(IceOut.Events==UniqueIce(16)),...
     IceOut.color(IceOut.Events==UniqueIce(16)), 'Color',...
@@ -172,7 +172,7 @@ h(2).LineStyle = '--';
 h(2).Color = Promare{5};
 h(2).LineWidth = 1;
 h(3).HandleVisibility = 'off'; h(4).HandleVisibility = 'off';
-text(220,63,'b','FontWeight','bold')
+text(100,100,'b','FontWeight','bold')
 legend('off');
 title('')
 ax = gca;
@@ -180,6 +180,7 @@ ax.FontName = 'arial';
 ax.FontWeight = 'bold';
 ax.LineWidth = 1;
 ax.Box = 'on';
+xlim([0 700]);ylim([30 105]);
 ylabel('')
 xlabel('Discharge (m^3/s)', 'Interpreter','tex')
 
@@ -196,7 +197,7 @@ h(2).LineStyle = '--';
 h(2).Color = Promare{5};
 h(2).LineWidth = 1;
 h(3).HandleVisibility = 'off'; h(4).HandleVisibility = 'off';
-text(60,107,'c','FontWeight','bold')
+text(100,100,'c','FontWeight','bold')
 legend('off');
 title('')
 ax = gca;
@@ -204,12 +205,13 @@ ax.FontName = 'arial';
 ax.FontWeight = 'bold';
 ax.LineWidth = 1;
 ax.Box = 'on';
+xlim([0 700]);ylim([30 105]);
 ylabel('')
 xlabel('Discharge (m^3/s)', 'Interpreter','tex')
 
 subplot(1,4,1)
-simFlow = 0.0283168.*(15000+30000.*sin(pi().*[1:21]'./21));
-simCol = 50 + 50*sin(pi().*[1:21]'./18.5 - (5*pi()/21))-([1:21]'./3.5).^2;
+simFlow = 0.0283168.*(2000+19000.*sin(pi().*[1:21]'./21));
+simCol = 50 + 30*sin(pi().*[1:21]'./19.5 - (5*pi()/21))-([1:21]'./3.5).^2;
 plot(simFlow(1:20),...
     simCol(1:20), 'Color',...
     Promare{8}, 'LineWidth', 1.5)
@@ -222,7 +224,7 @@ h(2).LineStyle = '--';
 h(2).Color = Promare{5};
 h(2).LineWidth = 1;
 h(3).HandleVisibility = 'off'; h(4).HandleVisibility = 'off';
-text(580,86,'a','FontWeight','bold')
+text(100,100,'a','FontWeight','bold')
 legend('off');
 title('')
 ax = gca;
@@ -230,8 +232,11 @@ ax.FontName = 'arial';
 ax.FontWeight = 'bold';
 ax.LineWidth = 1;
 ax.Box = 'on';
+xlim([0 700]);ylim([30 105]);
 ylabel('Color (PCU)')
 xlabel('Discharge (m^3/s)','Interpreter','tex')
+annotation('arrow',[0.2 0.25],[0.25 0.4], 'HeadWidth', 5, 'Color', Promare{5})
+annotation('arrow',[0.23 0.18],[0.5 0.35], 'HeadWidth', 5, 'Color', Promare{5})
 
 % An Analysis of Slope. If a linear regression is significant, keep its 
 % slope and p-value for later. 
@@ -274,5 +279,7 @@ ax.XAxis.TickLabelInterpreter = 'tex';
 ax.YAxisLocation = 'Right';
 xlabel(xl)
 ylabel('Loop Slope (PCU m^{-3} d)')
-text(0.6,0.37,'d','FontWeight','bold')
+text(0.6,0.36,'d','FontWeight','bold')
 [h, p]=ttest2(iceSlopes(:,2),rainSlopes(:,2))
+exportgraphics(f, "../figures/hysteresis.tif", 'Resolution', 600)
+close(f)

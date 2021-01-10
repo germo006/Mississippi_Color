@@ -1,6 +1,8 @@
 %% Noah Germolus, 24 March 2018
 % How about some R E G R E S S I O N S
 
+setDefaultFigs 
+
 FitTable = array2table(nullex, 'VariableNames', {'Y','M','d','C','Q','T','P'});
 FitTable.datenums = datenum(FitTable.Y,FitTable.M,FitTable.d);
 FitTable.logQ = log10(FitTable.Q);% - min(FitTable.Q));

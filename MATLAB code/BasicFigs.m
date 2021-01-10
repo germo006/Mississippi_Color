@@ -28,7 +28,7 @@ ylabel('Discharge (m^3 s^{-1})', 'Interpreter','tex');
 ax = gca; ax.FontName = 'arial'; ax.Box = 'on'; ax.LineWidth = 1; 
 ax.FontWeight = 'bold';
 
-saveas(f, outfolder+"wholedata.bmp")
+exportgraphics(f, outfolder+"wholedata.tif", 'Resolution', 600)
 close(f)
 %% Yearly Stats.
 
@@ -54,7 +54,7 @@ h(1).LineWidth = 1;h(2).LineWidth = 1;h(3).LineWidth = 1;
 xlabel('Year'); ylabel('Discharge (m^3 s^{-1})', 'Interpreter','tex');
 set(gca, 'LineWidth', 1, 'FontWeight', 'bold')
 
-saveas(f, outfolder+"YearStats.bmp")
+exportgraphics(f, outfolder+"YearStats.tif", 'Resolution', 600)
 close(f)
 
 %% Power Spectra
@@ -93,25 +93,35 @@ set(gca, 'LineWidth', 1, 'FontWeight', 'bold','YColor','k',...
 xlim([10^2, 10^4]./365)
 xticks([0.333,0.5,1:9,11,16])
 
-saveas(f, outfolder+"SpecDens.bmp")
+exportgraphics(f, outfolder+"SpecDens.tif", 'Resolution', 600)
 close(f)
 
 %% Histograms
 
 lQ = log10(nullex(:,5)); lC = log10(nullex(:,4));
 
-f = figure('Position', [100,100,900,400],'Units','inches');
-subplot(1,2,1)
+f = figure('Position', [100,100,900,900],'Units','inches');
+subplot(2,2,1)
 histogram(lC, 15, 'EdgeColor', Promare{2}, 'FaceColor', Promare{4}, 'Normalization', 'probability')
 ylabel('Relative Frequency'); xlabel('log_{10}(C)', 'Interpreter','tex')
 xlim([0.75, 2.5]); set(gca, 'LineWidth', 1, 'FontWeight', 'bold');
 
-subplot(1,2,2)
+subplot(2,2,2)
 histogram(lQ, 15, 'EdgeColor', Promare{2}, 'FaceColor', Promare{4}, 'Normalization', 'probability')
 xlabel('log_{10}(Q)', 'Interpreter','tex')
 xlim([1, 3.5]); set(gca, 'LineWidth', 1, 'FontWeight', 'bold'); ylim([0,0.25]);
 
-saveas(f, outfolder+"histograms.bmp")
+subplot(2,2,3)
+histogram(nullex(:,4), 15, 'EdgeColor', Promare{2}, 'FaceColor', Promare{4}, 'Normalization', 'probability')
+ylabel('Relative Frequency'); xlabel('Untransformed C', 'Interpreter','tex')
+xlim([0, 150]); set(gca, 'LineWidth', 1, 'FontWeight', 'bold');
+
+subplot(2,2,4)
+histogram(nullex(:,5), 25, 'EdgeColor', Promare{2}, 'FaceColor', Promare{4}, 'Normalization', 'probability')
+xlabel('Untransformed Q', 'Interpreter','tex')
+xlim([-100, 2000]); set(gca, 'LineWidth', 1, 'FontWeight', 'bold'); ylim([0,0.5]);
+
+exportgraphics(f, outfolder+"histograms.tif", 'Resolution', 600)
 close(f)
 
 %% Precip-Year separations.
@@ -147,27 +157,29 @@ seHi = sdHi./sqrt(nh); seLo = sdLo./sqrt(nl); seAvg = sdAvg./sqrt(na);
 dates = datetime(1:365', 'ConvertFrom', 'datenum');
 
 f = figure('Position', [100,100,900,600],'Units','inches');
-subplot(2,1,1)
+subplot(2,1,2)
 
 h(1) = fill([dates, fliplr(dates)],...
     [highFlow_avg' + seHi', fliplr(highFlow_avg' - seHi')],...
     Promare{1}, 'EdgeColor', 'none', 'FaceAlpha', 0.3);
 hold on
-h(2) = plot(dates, highFlow_avg, 'Color', Promare{1}, 'LineWidth', 1);
+h(2) = plot(dates, highFlow_avg, 'Color', Promare{1}, 'LineWidth', 1,...
+    'LineStyle', '--');
 
 j(1) = fill([dates, fliplr(dates)],...
     [lowFlow_avg' + seLo', fliplr(lowFlow_avg' - seLo')],...
-    Promare{2}, 'EdgeColor', 'none', 'FaceAlpha', 0.1);
-j(2) = plot(dates, lowFlow_avg, 'Color', Promare{2}, 'LineWidth', 1);
+    Promare{5}, 'EdgeColor', 'none', 'FaceAlpha', 0.2);
+j(2) = plot(dates, lowFlow_avg, 'Color', Promare{5}, 'LineWidth', 1);
 
 i(1) = fill([dates, fliplr(dates)],...
     [avgFlow_avg' + seAvg', fliplr(avgFlow_avg' - seAvg')],...
-    Promare{4}, 'EdgeColor', 'none', 'FaceAlpha', 0.3);
-i(2) = plot(dates, avgFlow_avg, 'Color', Promare{4}, 'LineWidth', 1);
+    Promare{7}, 'EdgeColor', 'none', 'FaceAlpha', 0.1);
+i(2) = plot(dates, avgFlow_avg, 'Color', Promare{7}, 'LineWidth', 1,...
+    'LineStyle','-.');
 
-legend([h(1), j(1), i(1)],{'Wet Year','Dry Year','Avg Year'},'Location','northeast')
+
 set(gca, 'LineWidth', 1, 'FontWeight', 'bold')
-ylabel('Discharge (m^3 s^{-1})', 'Interpreter','tex');
+ylabel('Discharge (m^3 s^{-1})', 'Interpreter','tex'); xlabel('Date');
 
 highCol = reshape(nullHigh(:,4), [365, nh]);
 lowCol = reshape(nullLow(:,4), [365, nl]);
@@ -180,26 +192,110 @@ avgCol_avg = mean(avgCol, 2); sdAvg = std(avgCol, 0, 2);
 % Some standard error on the mean...
 seHi = sdHi./sqrt(nh); seLo = sdLo./sqrt(nl); seAvg = sdAvg./sqrt(na); 
 
-subplot(2,1,2)
+subplot(2,1,1)
 
 h(1) = fill([dates, fliplr(dates)],...
     [highCol_avg' + seHi', fliplr(highCol_avg' - seHi')],...
     Promare{1}, 'EdgeColor', 'none', 'FaceAlpha', 0.3);
 hold on
-h(2) = plot(dates, highCol_avg, 'Color', Promare{1}, 'LineWidth', 1);
+h(2) = plot(dates, highCol_avg, 'Color', Promare{1}, 'LineWidth', 1,...
+    'LineStyle', '--');
 
 j(1) = fill([dates, fliplr(dates)],...
     [lowCol_avg' + seLo', fliplr(lowCol_avg' - seLo')],...
-    Promare{2}, 'EdgeColor', 'none', 'FaceAlpha', 0.1);
-j(2) = plot(dates, lowCol_avg, 'Color', Promare{2}, 'LineWidth', 1);
+    Promare{5}, 'EdgeColor', 'none', 'FaceAlpha', 0.2);
+j(2) = plot(dates, lowCol_avg, 'Color', Promare{5}, 'LineWidth', 1);
 
 i(1) = fill([dates, fliplr(dates)],...
     [avgCol_avg' + seAvg', fliplr(avgCol_avg' - seAvg')],...
-    Promare{4}, 'EdgeColor', 'none', 'FaceAlpha', 0.3);
-i(2) = plot(dates, avgCol_avg, 'Color', Promare{4}, 'LineWidth', 1);
+    Promare{7}, 'EdgeColor', 'none', 'FaceAlpha', 0.1);
+i(2) = plot(dates, avgCol_avg, 'Color', Promare{7}, 'LineWidth', 1,...
+    'LineStyle','-.');
 
 set(gca, 'LineWidth', 1, 'FontWeight', 'bold')
-ylabel('Color (PCU)', 'Interpreter','tex'); xlabel('Date');
+ylabel('Color (PCU)', 'Interpreter','tex');
+legend([h(1), j(1), i(1)],{'Wet Year','Dry Year','Avg Year'},'Location','northeast')
 
-saveas(f, outfolder+"FlowYears.bmp")
+exportgraphics(f, outfolder+"FlowYears.tif", 'Resolution', 600)
 close(f)
+
+%%
+load('mk40.mat');load('NoahMaps.mat')
+
+sY = 1947:1971; % starting years of the periods.
+f = figure;
+subplot(2,1,1)
+
+h(1) = plot(sY, 1-mk.p, 'Color', Promare{7}, 'LineWidth', 1); hold on;
+h(2) = plot(sY, 1-mk.p1, 'Color', Promare{1}, 'LineWidth', 1);
+h(3) = plot(sY, 1-mk.p2, 'Color', Promare{3}, 'LineWidth', 1);
+xlim([1947 1971]); ylim([0.8 1]);
+scatter(1,1,'MarkerFaceColor', Promare{6}, 'MarkerEdgeColor', 'k', 'MarkerFaceAlpha', 0.5)
+scatter(1,1,'MarkerFaceColor', Promare{5}, 'MarkerEdgeColor', 'k', 'MarkerFaceAlpha', 0.5)
+ax = gca;
+ax.LineWidth = 1;
+ylabel('1 - P(no trend)')
+ax.FontWeight = 'bold';
+legend(ax, {'Mean', 'Max', 'Min', 'Decreasing', 'Increasing'})
+s(1) = scatter(sY(mk.Trend=='-'), 1-mk.p(mk.Trend=='-'),...
+    'MarkerFaceColor', Promare{6}, 'MarkerEdgeColor', 'k',...
+    'HandleVisibility', 'off', 'MarkerFaceAlpha', 0.5);
+s(2) = scatter(sY(mk.Trend=='+'), 1-mk.p(mk.Trend=='+'),...
+    'MarkerFaceColor', Promare{5}, 'MarkerEdgeColor', 'k',...
+    'HandleVisibility', 'off', 'MarkerFaceAlpha', 0.5);
+s(3) =  scatter(sY(mk.Trend1=='-'), 1-mk.p1(mk.Trend1=='-'),...
+    'MarkerFaceColor', Promare{6}, 'MarkerEdgeColor', 'k',...
+    'HandleVisibility', 'off', 'MarkerFaceAlpha', 0.5);
+s(4) = scatter(sY(mk.Trend1=='+'), 1-mk.p1(mk.Trend1=='+'),...
+    'MarkerFaceColor', Promare{5}, 'MarkerEdgeColor', 'k',...
+    'HandleVisibility', 'off', 'MarkerFaceAlpha', 0.5);
+s(5) =  scatter(sY(mk.Trend2=='-'), 1-mk.p2(mk.Trend2=='-'),...
+    'MarkerFaceColor', Promare{6}, 'MarkerEdgeColor', 'k',...
+    'HandleVisibility', 'off', 'MarkerFaceAlpha', 0.5);
+s(6) = scatter(sY(mk.Trend2=='+'), 1-mk.p2(mk.Trend2=='+'),...
+    'MarkerFaceColor', Promare{5}, 'MarkerEdgeColor', 'k',...
+    'HandleVisibility', 'off', 'MarkerFaceAlpha', 0.5);
+plot(sY, 0.95*ones(size(sY)), '--', 'Color', [0.5 0.5 0.5],...
+    'HandleVisibility', 'off')
+
+yyaxis right
+ax2 = gca; ax2.YColor = 'k'; ax2.YTickLabel = '';
+ylabel('Summer')
+
+subplot(2,1,2)
+
+h(1) = plot(sY, 1-mk.p8, 'Color', Promare{7}, 'LineWidth', 1); hold on;
+h(2) = plot(sY, 1-mk.p9, 'Color', Promare{1}, 'LineWidth', 1);
+h(3) = plot(sY, 1-mk.p10, 'Color', Promare{3}, 'LineWidth', 1);
+xlim([1947 1971]); ylim([0.8 1]);
+ax = gca;
+ax.LineWidth = 1;
+ylabel('1 - P(no trend)')
+plot(sY, 0.95*ones(size(sY)), '--', 'Color', [0.5 0.5 0.5],...
+    'HandleVisibility', 'off')
+ax.FontWeight = 'bold';
+s(1) = scatter(sY(mk.Trend8=='-'), 1-mk.p8(mk.Trend8=='-'),...
+    'MarkerFaceColor', Promare{6}, 'MarkerEdgeColor', 'k',...
+    'HandleVisibility', 'off', 'MarkerFaceAlpha', 0.5);
+s(2) = scatter(sY(mk.Trend8=='+'), 1-mk.p8(mk.Trend8=='+'),...
+    'MarkerFaceColor', Promare{5}, 'MarkerEdgeColor', 'k',...
+    'HandleVisibility', 'off', 'MarkerFaceAlpha', 0.5);
+s(3) =  scatter(sY(mk.Trend9=='-'), 1-mk.p9(mk.Trend9=='-'),...
+    'MarkerFaceColor', Promare{6}, 'MarkerEdgeColor', 'k',...
+    'HandleVisibility', 'off', 'MarkerFaceAlpha', 0.5);
+s(4) = scatter(sY(mk.Trend9=='+'), 1-mk.p9(mk.Trend9=='+'),...
+    'MarkerFaceColor', Promare{5}, 'MarkerEdgeColor', 'k',...
+    'HandleVisibility', 'off', 'MarkerFaceAlpha', 0.5);
+s(5) =  scatter(sY(mk.Trend10=='-'), 1-mk.p10(mk.Trend10=='-'),...
+    'MarkerFaceColor', Promare{6}, 'MarkerEdgeColor', 'k',...
+    'HandleVisibility', 'off', 'MarkerFaceAlpha', 0.5);
+s(6) = scatter(sY(mk.Trend10=='+'), 1-mk.p10(mk.Trend10=='+'),...
+    'MarkerFaceColor', Promare{5}, 'MarkerEdgeColor', 'k',...
+    'HandleVisibility', 'off', 'MarkerFaceAlpha', 0.5);
+
+yyaxis right
+ax2 = gca; ax2.YColor = 'k'; ax2.YTickLabel = '';
+ylabel('Winter')
+xlabel('40-Year Period Start Year')
+exportgraphics(gcf, outfolder+"MK40.tif", 'Resolution', 600)
+close(gcf)
