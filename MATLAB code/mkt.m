@@ -10,7 +10,9 @@ X(1,:) = []; %delete 1944
 
 i = find(X(:,1)==year);
 
-[ind, ~, ~] = Mann_Kendall_Targeted(X(:,2), l, i, a);
+[ind, p, ~] = Mann_Kendall_Targeted(X(:,2), l, i, a);
+
+p
 
 if isnan(ind)
     spanyears = ind;

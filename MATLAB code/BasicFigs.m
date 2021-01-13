@@ -1,7 +1,7 @@
 %% Noah Germolus 29 May 2020
 % This is literally just a plot generator.
 
-load('redoNullex_25April2020.mat')
+load('redoNullex_10Jan2021.mat')
 load('NoahMaps.mat') % Using the Promare color scheme for some graphs.
 nullex(:,5) = nullex(:,5).*0.0283168;
 outfolder = "../Figures/";
