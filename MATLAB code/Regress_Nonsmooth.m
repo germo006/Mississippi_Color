@@ -3,7 +3,7 @@
 
 setDefaultFigs 
 
-FitTable = array2table(nullex, 'VariableNames', {'Y','M','d','C','Q','T','P'});
+FitTable = array2table(nullex{:,1:7}, 'VariableNames', {'Y','M','d','C','Q','T','P'});
 FitTable.datenums = datenum(FitTable.Y,FitTable.M,FitTable.d);
 FitTable.logQ = log10(FitTable.Q);% - min(FitTable.Q));
 FitTable.lagQ = [NaN;NaN;NaN;NaN;FitTable.Q(1:end-4)];%-min(FitTable.Q(1:end-4))];
@@ -11,7 +11,7 @@ FitTable.loglagQ = log10(FitTable.lagQ);
 FitTable.logC = log10(FitTable.C);
 FitTable.sine = sin(FitTable.datenums*2*pi./365.25);
 FitTable.cosine = cos(FitTable.datenums*2*pi./365.25);
-FitTable.dater = FitTable.datenums - FitTable.datenums(1);
+FitTable.dater = FitTable.datenums(:,1) - FitTable.datenums(1);
 
 mdl_lagQ = fitlm(FitTable, 'C ~ lagQ');
 mdl_logQ = fitlm(FitTable, 'logC ~ logQ');

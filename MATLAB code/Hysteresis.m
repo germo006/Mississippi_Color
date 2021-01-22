@@ -241,7 +241,8 @@ xlabel('Discharge (m^3/s)','Interpreter','tex')
 annotation('arrow',[0.2 0.25],[0.25 0.4], 'HeadWidth', 5, 'Color', Promare{5})
 annotation('arrow',[0.23 0.18],[0.5 0.35], 'HeadWidth', 5, 'Color', Promare{5})
 
-% An Analysis of Slope. If a linear regression is significant, keep its 
+
+%% An Analysis of Slope. If a linear regression is significant, keep its 
 % slope and p-value for later. 
 iceSlopes = zeros(length(UniqueIce), 3); %Year, Slope, pval
 rainSlopes = zeros(length(UniqueRain), 3);
@@ -261,10 +262,12 @@ for ii = 1:length(UniqueRain)
 end
 clear m1 disc colr yr h
 
+elimIce = 100* ((length(iceSlopes) - sum(iceSlopes(:,3)>0.01))/length(iceSlopes));
 iceSlopes(iceSlopes(:,3)>0.01, :) = [];
+elimRain = 100* ((length(rainSlopes) - sum(rainSlopes(:,3)>0.01))/length(rainSlopes));
 rainSlopes(rainSlopes(:,3)>0.01, :) = [];
 
-% A bit of wrangling to get the boxplot to work
+%% A bit of wrangling to get the boxplot to work
 types = [string(repmat('Ice Loops', size(iceSlopes,1),1));...
     string(repmat('Rain Loops', size(rainSlopes,1),1))];
 subplot(1,4,4)
@@ -282,12 +285,12 @@ ax.XAxis.TickLabelInterpreter = 'tex';
 ax.YAxisLocation = 'Right';
 xlabel(xl)
 ylabel('Loop Slope (PCU m^{-3} d)')
-<<<<<<< HEAD
+
 text(0.6,0.36,'d','FontWeight','bold')
 [h, p]=ttest2(iceSlopes(:,2),rainSlopes(:,2))
 exportgraphics(f, "../figures/hysteresis.tif", 'Resolution', 600)
 close(f)
-=======
+
 text(0.6,0.37,'d','FontWeight','bold')
 [h, p]=ttest2(iceSlopes(:,2),rainSlopes(:,2))
 
@@ -311,4 +314,3 @@ plot(unique(rainSlopes(:,1)), rmeansl,...
     'LineWidth', 1, 'Color', Promare{3})
 ylabel('Mean rain Q-C Slope')
 xlabel('Year')
->>>>>>> refs/remotes/origin/master
