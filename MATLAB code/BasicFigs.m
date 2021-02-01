@@ -3,17 +3,17 @@
 
 load('redoNullex_10Jan2021.mat')
 load('NoahMaps.mat') % Using the Promare color scheme for some graphs.
-nullex(:,5) = nullex(:,5).*0.0283168;
+%nullex(:,5) = nullex(:,5).*0.0283168;
 outfolder = "../Figures/";
 
 %% Overall Dataset Plot
 
-f = figure('Position', [100,100,900,600],'Units','inches');
+f = figure('Position', [100,100,1200,600],'Units','inches');
 
 subplot(2,1,1)
 h1 = plot(datetime(nullex(367:end,1:3)), nullex(367:end,4));
-h1.LineWidth = 0.2;
-h1.Color = Promare{5};
+h1.LineWidth = 0.5;
+h1.Color = [0.7 0.6 0.5];
 xlabel('Date', 'Interpreter','tex');
 ylabel('Color (PCU)', 'Interpreter','tex');
 ax = gca; ax.FontName = 'arial'; ax.Box = 'on'; ax.LineWidth = 1; 
@@ -21,8 +21,8 @@ ax.FontWeight = 'bold';
 
 subplot(2,1,2)
 h1 = plot(datetime(nullex(367:end,1:3)), nullex(367:end,5));
-h1.LineWidth = 0.2;
-h1.Color = Promare{7};
+h1.LineWidth = 0.5;
+h1.Color = [0.3, 0.2, 1.0];
 xlabel('Date', 'Interpreter','tex');
 ylabel('Discharge (m^3 s^{-1})', 'Interpreter','tex');
 ax = gca; ax.FontName = 'arial'; ax.Box = 'on'; ax.LineWidth = 1; 
@@ -127,21 +127,32 @@ close(f)
 %% Precip-Year separations.
 
 % Straight up ripped this code from SplitFlowYears.m
+% New in Jan 2021: use of 12-mo SPI supercedes the single-station precip
+load('SPIyr.mat')
+[~, ia, ~] = unique(spi{:,1});
+spi_yr = spi{ia, 2};
+hispi = Year(spi_yr > prctile(spi_yr, 66), 1);
+lospi = Year(spi_yr < prctile(spi_yr, 33), 1);
+avspi = Year(spi_yr < prctile(spi_yr, 66) & spi_yr > prctile(spi_yr, 33), 1);
 
 precipCum = [unique(nullex(:,1)), splitapply(@sum, nullex(:,7), YearGroups)];
 HighYrs = precipCum(precipCum(:,2)>prctile(precipCum(:,2),66) ,1);
 LowYrs = precipCum(precipCum(:,2)<prctile(precipCum(:,2),33) ,1);
 AvgYrs = precipCum(precipCum(:,2)<prctile(precipCum(:,2),66)&precipCum(:,2)>prctile(precipCum(:,2),33) ,1);
 
-nullHigh = nullex(ismember(nullex(:,1),HighYrs),:);
-nullLow = nullex(ismember(nullex(:,1),LowYrs),:);
-nullAvg = nullex(ismember(nullex(:,1),AvgYrs),:);
+hidiff = (sum(~ismember(hispi, HighYrs)))/length(hispi);
+lodiff = (sum(~ismember(lospi, LowYrs)))/length(lospi);
+avdiff = (sum(~ismember(avspi, AvgYrs)))/length(avspi);
+
+nullHigh = nullex(ismember(nullex(:,1),hispi),:);
+nullLow = nullex(ismember(nullex(:,1),lospi),:);
+nullAvg = nullex(ismember(nullex(:,1),avspi),:);
 
 nullHigh(nullHigh(:,2)==2&nullHigh(:,3)==29,:) = [];
 nullLow(nullLow(:,2)==2&nullLow(:,3)==29,:) = [];
 nullAvg(nullAvg(:,2)==2&nullAvg(:,3)==29,:) = [];
 
-nh = length(HighYrs); nl = length(LowYrs); na = length(AvgYrs);
+nh = length(hispi); nl = length(lospi); na = length(avspi);
 
 highFlow = reshape(nullHigh(:,5), [365, nh]);
 lowFlow = reshape(nullLow(:,5), [365, nl]);
@@ -161,9 +172,9 @@ subplot(2,1,2)
 
 h(1) = fill([dates, fliplr(dates)],...
     [highFlow_avg' + seHi', fliplr(highFlow_avg' - seHi')],...
-    Promare{1}, 'EdgeColor', 'none', 'FaceAlpha', 0.3);
+    Promare{1}, 'EdgeColor', 'none', 'FaceAlpha', 0.2);
 hold on
-h(2) = plot(dates, highFlow_avg, 'Color', Promare{1}, 'LineWidth', 1,...
+h(2) = plot(dates, highFlow_avg, 'Color', Promare{1}.*[0.5,0.5,1.1], 'LineWidth', 1,...
     'LineStyle', '--');
 
 j(1) = fill([dates, fliplr(dates)],...
@@ -196,9 +207,9 @@ subplot(2,1,1)
 
 h(1) = fill([dates, fliplr(dates)],...
     [highCol_avg' + seHi', fliplr(highCol_avg' - seHi')],...
-    Promare{1}, 'EdgeColor', 'none', 'FaceAlpha', 0.3);
+    Promare{1}, 'EdgeColor', 'none', 'FaceAlpha', 0.2);
 hold on
-h(2) = plot(dates, highCol_avg, 'Color', Promare{1}, 'LineWidth', 1,...
+h(2) = plot(dates, highCol_avg, 'Color', Promare{1}.*[0.5,0.5,1.1], 'LineWidth', 1,...
     'LineStyle', '--');
 
 j(1) = fill([dates, fliplr(dates)],...
