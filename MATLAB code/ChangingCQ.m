@@ -115,26 +115,31 @@ years = unique(logs.Y);
 %%
 
 f1 = figure;
-h(1) = stem(years,Rs, 'Color', Promare{1}, 'Marker', 'none', 'LineWidth', 1);
+j = stem(years,Rs, 'Color', Promare{1}, 'Marker', 'none', 'LineWidth', 1);
 hold on
-
-h(2) = errorbar(years, slps, SEs, 'Color','k','LineStyle','none');
-h(3) = scatter(years(Rs>0.5), slps(Rs>0.5), 25,...
+ylim([0,1])
+h(1) = errorbar(years, slps, SEs, 'Color','k','LineStyle','none');
+hold on
+h(2) = scatter(years(Rs>0.5), slps(Rs>0.5), 25,...
     'Marker','o','MarkerFaceColor', Promare{6}, 'MarkerEdgeColor', Promare{5});
-set(gca, 'XTickLabelRotation', 60)
+ax1=gca;
+set(ax1, 'XTickLabelRotation', 60)
 
-h(4) = lsline; reg = fitlm(years(Rs>0.5), slps(Rs>0.5)); h(4).Color = [.1 .1 .1];
+h(3) = lsline; reg = fitlm(years(Rs>0.5), slps(Rs>0.5)); h(3).Color = [.1 .1 .1];
 Mann_Kendall(slps(Rs>0.5),0.05)
 Mann_Kendall(slps, 0.05)
-h(5) = scatter(years(Rs<0.5), slps(Rs<0.5), 25,...
+h(4) = scatter(years(Rs<0.5), slps(Rs<0.5), 25,...
     'Marker','o','MarkerFaceColor', Promare{5}, 'MarkerEdgeColor', Promare{5});
 xlabel('Period of Model Fit')
-ylabel('Linear Coefficient +/- SE')
+ylabel('Linear Coefficient +/- SE {\it or} R^2')
 xlim([1946,2011]); ylim([0,2]);
+
+
 % yyaxis right
 % k(1) = scatter(years, SCOS, 15, 'Marker', 'x','MarkerEdgeColor', 'k'); k(2) = lsline;
 % k(2).Color = 'k';
 set(gca, 'YColor', 'k')
+axes(ax1)
 exportgraphics(f1, outfolder+"AllYearTrend.tif", 'Resolution', 600)
 close(gcf)
 

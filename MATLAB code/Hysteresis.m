@@ -214,7 +214,7 @@ xlabel('Discharge (m^3/s)', 'Interpreter','tex')
 
 subplot(1,4,1)
 simFlow = 0.0283168.*(2000+19000.*sin(pi().*[1:21]'./21));
-simCol = 50 + 30*sin(pi().*[1:21]'./19.5 - (5*pi()/21))-([1:21]'./3.5).^2;
+simCol = 50 + 30*sin(pi().*[1:21]'./19.5 - (5*pi()/21))-([1:21]'./4).^2;
 plot(simFlow(1:20),...
     simCol(1:20), 'Color',...
     Promare{8}, 'LineWidth', 1.5)
@@ -239,7 +239,7 @@ xlim([0 700]);ylim([30 105]);
 ylabel('Color (PCU)')
 xlabel('Discharge (m^3/s)','Interpreter','tex')
 annotation('arrow',[0.2 0.25],[0.25 0.4], 'HeadWidth', 5, 'Color', Promare{5})
-annotation('arrow',[0.23 0.18],[0.5 0.35], 'HeadWidth', 5, 'Color', Promare{5})
+annotation('arrow',[0.23 0.18],[0.56 0.42], 'HeadWidth', 5, 'Color', Promare{5})
 
 
 %% An Analysis of Slope. If a linear regression is significant, keep its 
@@ -289,9 +289,9 @@ ylabel('Loop Slope (PCU m^{-3} d)')
 text(0.6,0.36,'d','FontWeight','bold')
 [h, p]=ttest2(iceSlopes(:,2),rainSlopes(:,2))
 exportgraphics(f, "../figures/hysteresis.tif", 'Resolution', 600)
-close(f)
+%close(f)
 
-text(0.6,0.37,'d','FontWeight','bold')
+%text(0.6,0.37,'d','FontWeight','bold')
 [h, p]=ttest2(iceSlopes(:,2),rainSlopes(:,2))
 
 %% Addendum 11 June 2020

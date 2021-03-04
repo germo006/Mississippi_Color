@@ -40,7 +40,7 @@ h(1) = plot(Year, splitapply(@nanmax, nullex(:,4), YearGroups),':', 'Color', Pro
 hold on
 h(2) = plot(Year, splitapply(@nanmean, nullex(:,4), YearGroups),'-.', 'Color', Promare{1});
 h(3) = plot(Year, splitapply(@nanmin, nullex(:,4), YearGroups),'-', 'Color', Promare{5});
-h(1).LineWidth = 1;h(2).LineWidth = 1;h(3).LineWidth = 1;
+h(1).LineWidth = 1.5;h(2).LineWidth = 1.5;h(3).LineWidth = 1.5;
 legend({'Yearly Peak','Yearly Mean','Yearly Min'},'Location','northoutside','NumColumns', 3)
 ylabel('Color (PCU)')
 set(gca, 'LineWidth', 1, 'FontWeight', 'bold')
@@ -50,7 +50,7 @@ h(1) = plot(Year, splitapply(@nanmax, nullex(:,5), YearGroups),':', 'Color', Pro
 hold on
 h(2) = plot(Year, splitapply(@nanmean, nullex(:,5), YearGroups),'-.', 'Color', Promare{1});
 h(3) = plot(Year, splitapply(@nanmin, nullex(:,5), YearGroups),'-', 'Color', Promare{5});
-h(1).LineWidth = 1;h(2).LineWidth = 1;h(3).LineWidth = 1;
+h(1).LineWidth = 1.5;h(2).LineWidth = 1.5;h(3).LineWidth = 1.5;
 xlabel('Year'); ylabel('Discharge (m^3 s^{-1})', 'Interpreter','tex');
 set(gca, 'LineWidth', 1, 'FontWeight', 'bold')
 
